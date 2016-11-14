@@ -1,4 +1,5 @@
-This is your new Play application
+# cloud-auth
+Referring to cloud-leviathan, a new Scala based authentication service.
 =================================
 
 This file will be packaged with your application when using `activator dist`.
