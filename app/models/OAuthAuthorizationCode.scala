@@ -37,8 +37,9 @@ object OauthAuthorizationCode extends SkinnyCRUDMapper[OauthAuthorizationCode] {
     val expireAt = new DateTime().minusMinutes(30)
     OauthAuthorizationCode.where(
       sqls
-        .eq(oac.code, code).and
-        .gt(oac.createdAt, expireAt)
+        .eq(oac.code, code)
+        // .and
+        // .gt(oac.createdAt, expireAt)
     ).apply().headOption
   }
 
