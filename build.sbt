@@ -23,5 +23,6 @@ libraryDependencies ++= Seq(
   evolutions,
   "org.postgresql" % "postgresql" % "9.4.1211.jre7",
   "org.skinny-framework" % "skinny-orm_2.11" % "2.3.0-RC1",
-  "org.scalikejdbc" % "scalikejdbc-play-dbapi-adapter_2.11" % "2.5.1"
+  // "org.scalikejdbc" % "scalikejdbc-play-dbapi-adapter_2.11" % "2.5.1"
+  "org.scalikejdbc" % "scalikejdbc_2.11" % "2.5.0"
 )

@@ -6,7 +6,8 @@ import play.api._
 import play.api.mvc._
 import play.api.libs.json.{Json, Writes}
 import play.api.mvc.{Action, Controller}
-import scalikejdbc.DB
+import scalikejdbc._
+import scalikejdbc.config._
 
 import scala.concurrent.Future
 import scalaoauth2.provider._
@@ -47,6 +48,7 @@ class OAuthController @Inject() extends Controller with OAuth2Provider {
   class MyDataHandler extends DataHandler[Account] {
 
     // common
+    DBs.setupAll()
 
     override def validateClient(request: AuthorizationRequest): Future[Boolean] = DB.readOnly { implicit session =>
       Future.successful((for {
