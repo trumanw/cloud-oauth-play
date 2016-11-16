@@ -3,11 +3,10 @@
 # ~~~~
 
 # Home page
-GET     /                           controllers.Application.index
+GET     /health                     controllers.HealthCheckController.simplyHealthCheck
 
 # OAuth API
 POST    /oauth/access_token         controllers.OAuthController.accessToken
-# GET     /resources                  controllers.OAuthController.resources
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
