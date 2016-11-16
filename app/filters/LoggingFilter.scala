@@ -9,6 +9,7 @@ import org.joda.time.DateTime
 import org.joda.time.format.ISODateTimeFormat
 import org.joda.time.format.DateTimeFormatterBuilder
 
+import javax.inject._
 import javax.inject.Inject
 import akka.stream.Materializer
 import scala.concurrent.{ExecutionContext, Future}

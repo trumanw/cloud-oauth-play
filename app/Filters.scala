@@ -3,6 +3,7 @@ import play.api._
 import play.api.http.HttpFilters
 import play.api.http.HttpFilters
 import play.filters.gzip.GzipFilter
+import play.filters.cors.CORSFilter
 import play.api.mvc._
 
 import filters.LoggingFilter
