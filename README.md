@@ -59,4 +59,3 @@ Content-Length: 90
 
 {"account":{"email":"alice@example.com"},"clientId":"alice_client_id2","redirectUri":null}
 ```
->>>>>>> develop
