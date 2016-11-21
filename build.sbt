@@ -18,6 +18,11 @@ libraryDependencies ++= Seq(
   "com.nulab-inc" %% "play2-oauth2-provider" % "1.0.0"
 )
 
+// Deadbolt
+libraryDependencies ++= Seq(
+  "be.objectify" %% "deadbolt-scala" % "2.5.0"
+)
+
 // Database dependencies
 libraryDependencies ++= Seq(
   jdbc,
