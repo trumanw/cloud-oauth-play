@@ -4,16 +4,31 @@ version := "1.0-SNAPSHOT"
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala)
 
-scalaVersion := "2.11.7"
+scalaVersion := "2.11.8"
 
 libraryDependencies ++= Seq(
-  jdbc,
   cache,
   ws,
+  filters,
   "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.1" % Test
 )
 
 // Scala OAuth2 Provider
 libraryDependencies ++= Seq(
   "com.nulab-inc" %% "play2-oauth2-provider" % "1.0.0"
+)
+
+// Deadbolt
+libraryDependencies ++= Seq(
+  "be.objectify" %% "deadbolt-scala" % "2.5.0"
+)
+
+// Database dependencies
+libraryDependencies ++= Seq(
+  jdbc,
+  evolutions,
+  "org.postgresql" % "postgresql" % "9.4.1211.jre7",
+  "org.skinny-framework" % "skinny-orm_2.11" % "2.3.0-RC1",
+  // "org.scalikejdbc" % "scalikejdbc-play-dbapi-adapter_2.11" % "2.5.1"
+  "org.scalikejdbc" % "scalikejdbc_2.11" % "2.5.0"
 )

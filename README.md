@@ -2,50 +2,61 @@
 OAuth service on Play Framework
 =================================
 
-This file will be packaged with your application when using `activator dist`.
+- [scala-oauth2-provider](https://github.com/nulab/scala-oauth2-provider) 0.17.x
+- [Play Framework](https://www.playframework.com/) 2.5.x
+- [Skinny-ORM](http://skinny-framework.org/documentation/orm.html) 2.0.x
 
-There are several demonstration files available in this template.
+## Running Play Framework with evolutions
 
-Controllers
-===========
+```
+$ sbt -Dplay.evolutions.db.default.autoApply=true run
+```
 
-- HomeController.scala:
+## Try to create access tokens using curl
 
-  Shows how to handle simple HTTP requests.
+### Client credentials
 
-- AsyncController.scala:
+```
+$ curl http://localhost:9000/oauth/access_token -X POST -d "client_id=bob_client_id" -d "client_secret=bob_client_secret" -d "grant_type=client_credentials"
+```
 
-  Shows how to do asynchronous programming when handling a request.
+### Authorization code
 
-- CountController.scala:
+```
+$ curl http://localhost:9000/oauth/access_token -X POST -d "client_id=alice_client_id" -d "client_secret=alice_client_secret" -d "redirect_uri=http://localhost:3000/callback" -d "code=bob_code" -d "grant_type=authorization_code"
+```
 
-  Shows how to inject a component into a controller and use the component when
-  handling requests.
+NOTE: A service needs to generate `code` in advance. In this example, the code has been inserted in database by evolutions.
 
-Components
-==========
+### Password
 
-- Module.scala:
+```
+$ curl http://localhost:9000/oauth/access_token -X POST -d "client_id=alice_client_id2" -d "client_secret=alice_client_secret2" -d "username=alice@example.com" -d "password=alice" -d "grant_type=password"
+```
 
-  Shows how to use Guice to bind all the components needed by your application.
+### Refresh token
 
-- Counter.scala:
+```
+$ curl http://localhost:9000/oauth/access_token -X POST -d "client_id=alice_client_id2" -d "client_secret=alice_client_secret2" -d "refresh_token=${refresh_token}" -d "grant_type=refresh_token"
+```
 
-  An example of a component that contains state, in this case a simple counter.
+NOTE: `${refresh_token}` is you got `refresh_token` from json of password grant. (client_id and client_secret are also same with password grant)
 
-- ApplicationTimer.scala:
+### Access resource using access_token
 
-  An example of a component that starts when the application starts and stops
-  when the application stops.
+You can access application resource using access token.
 
-Filters
-=======
+```
+$ curl --dump-header - -H "Authorization: Bearer ${access_token}" http://localhost:9000/resources
+```
 
-- Filters.scala:
+In this example, server just returns authorized user information.
 
-  Creates the list of HTTP filters used by your application.
+```
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+Content-Length: 90
 
-- ExampleFilter.scala
-
-  A simple filter that adds a header to every response.
-=======
+{"account":{"email":"alice@example.com"},"clientId":"alice_client_id2","redirectUri":null}
+```
+>>>>>>> develop
