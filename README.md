@@ -1,5 +1,5 @@
-# cloud-auth
-Referring to cloud-leviathan, a new Scala based authentication service.
+# cloud-oauth-play
+OAuth service on Play Framework
 =================================
 
 This file will be packaged with your application when using `activator dist`.
@@ -48,3 +48,4 @@ Filters
 - ExampleFilter.scala
 
   A simple filter that adds a header to every response.
+=======
