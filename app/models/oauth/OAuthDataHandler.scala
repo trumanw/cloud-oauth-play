@@ -13,24 +13,36 @@ class OAuthDataHandler extends DataHandler[Account] {
   // common
   DBs.setupAll()
 
-  override def validateClient(request: AuthorizationRequest): Future[Boolean] = DB.readOnly { implicit session =>
+  def validateClient(request: AuthorizationRequest): Future[Boolean] = DB.readOnly { implicit session =>
     Future.successful((for {
       clientCredential <- request.clientCredential
     } yield OauthClient.validate(clientCredential.clientId, clientCredential.clientSecret.getOrElse(""), request.grantType)).contains(true))
   }
 
-  override def getStoredAccessToken(authInfo: AuthInfo[Account]): Future[Option[AccessToken]] = DB.readOnly { implicit session =>
-    Future.successful(OauthAccessToken.findByAuthorized(authInfo.user, authInfo.clientId.getOrElse("")).map(toAccessToken))
+  def getStoredAccessToken(authInfo: AuthInfo[Account]): Future[Option[AccessToken]] = DB.readOnly { implicit session =>
+    Future.successful(OauthAccessToken.findByAuthorized(authInfo.user, authInfo.clientId.getOrElse("")).map { oauthToken =>
+      toAccessToken(oauthToken, authInfo)
+    })
   }
 
-  override def createAccessToken(authInfo: AuthInfo[Account]): Future[AccessToken] = DB.localTx { implicit session =>
+  def createAccessToken(authInfo: AuthInfo[Account]): Future[AccessToken] = DB.localTx { implicit session =>
     val clientId = authInfo.clientId.getOrElse(throw new InvalidClient())
     val oauthClient = OauthClient.findByClientId(clientId).getOrElse(throw new InvalidClient())
     val accessToken = OauthAccessToken.create(authInfo.user, oauthClient)
-    Future.successful(toAccessToken(accessToken))
+    Future.successful(toAccessToken(accessToken, authInfo))
   }
 
   private val accessTokenExpireSeconds = 3600
+  private def toAccessToken(accessToken: OauthAccessToken, authInfo: AuthInfo[Account]) = {
+    AccessToken(
+      accessToken.accessToken,
+      Some(accessToken.refreshToken),
+      authInfo.scope,
+      Some(accessTokenExpireSeconds),
+      accessToken.createdAt.toDate
+    )
+  }
+
   private def toAccessToken(accessToken: OauthAccessToken) = {
     AccessToken(
       accessToken.accessToken,
@@ -80,7 +92,7 @@ class OAuthDataHandler extends DataHandler[Account] {
     val clientId = authInfo.clientId.getOrElse(throw new InvalidClient())
     val client = OauthClient.findByClientId(clientId).getOrElse(throw new InvalidClient())
     val accessToken = OauthAccessToken.refresh(authInfo.user, client)
-    Future.successful(toAccessToken(accessToken))
+    Future.successful(toAccessToken(accessToken, authInfo))
   }
 
   // Authorization code grant

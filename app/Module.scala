@@ -1,5 +1,8 @@
 import com.google.inject.AbstractModule
 import services.{PostgresSQLHealthCheck, HealthCheck}
+import models.deadbolt.OAuthDeadboltHandlerCache
+import be.objectify.deadbolt.scala.cache.HandlerCache
+
 
 /**
  * This class is a Guice module that tells Guice how to bind several
@@ -16,6 +19,8 @@ class Module extends AbstractModule {
   override def configure() = {
     // Set PostgresSQLHealthCheck as the implementation for HealthCheck.
     bind(classOf[HealthCheck]).to(classOf[PostgresSQLHealthCheck])
+    // Deadbolt cache handler
+    bind(classOf[HandlerCache]).to(classOf[OAuthDeadboltHandlerCache])
   }
 
 }

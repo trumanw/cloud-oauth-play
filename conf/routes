@@ -10,3 +10,6 @@ POST    /oauth/access_token         controllers.OAuthController.accessToken
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
+
+# Protected API
+GET     /oauth2/test                controllers.ProtectedController.tokenPresent
